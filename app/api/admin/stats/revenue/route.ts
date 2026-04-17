@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -47,8 +49,8 @@ export async function GET(req: NextRequest) {
       existing.revenue += o.amountUsd;
     } else {
       productAgg.set(pk, {
-        name: o.product?.name ?? "—",
-        game: o.game?.name ?? "—",
+        name: o.product?.name ?? "â€”",
+        game: o.game?.name ?? "â€”",
         count: 1,
         revenue: o.amountUsd,
       });

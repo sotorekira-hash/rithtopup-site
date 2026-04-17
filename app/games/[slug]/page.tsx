@@ -6,12 +6,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Zap } from "lucide-react";
 
-export const revalidate = 60;
-
-export async function generateStaticParams() {
-  const games = await prisma.game.findMany({ select: { slug: true } });
-  return games.map((g) => ({ slug: g.slug }));
-}
+export const dynamic = "force-dynamic";
 
 export default async function GamePage({ params }: { params: { slug: string } }) {
   const game = await prisma.game.findUnique({

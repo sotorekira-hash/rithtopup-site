@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 
 // Simulation: pretends payment succeeded and marks order PAID, then DELIVERED.
@@ -40,7 +42,7 @@ export async function GET(req: NextRequest) {
   const html = `<!doctype html>
 <html>
 <head>
-<title>Payment Simulated — RITHTOPUP</title>
+<title>Payment Simulated â€” RITHTOPUP</title>
 <meta http-equiv="refresh" content="3;url=${baseUrl}/order?number=${orderNumber}">
 <style>
   body { font-family: system-ui; background: #0A0A0F; color: #F5F5F7; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
@@ -53,12 +55,12 @@ export async function GET(req: NextRequest) {
 </head>
 <body>
   <div class="box">
-    <div class="check">✅</div>
+    <div class="check">âœ…</div>
     <h1>Payment Simulated</h1>
     <p>Order <code>${orderNumber}</code> is being processed.</p>
-    <p style="color:#8B8B9E;font-size:0.875rem">Simulation mode is active — in production this would be your real ABA Pay or Binance Pay confirmation.</p>
+    <p style="color:#8B8B9E;font-size:0.875rem">Simulation mode is active â€” in production this would be your real ABA Pay or Binance Pay confirmation.</p>
     <p>Redirecting to order tracker in 3s...</p>
-    <p><a href="${baseUrl}/order?number=${orderNumber}">Continue now →</a></p>
+    <p><a href="${baseUrl}/order?number=${orderNumber}">Continue now â†’</a></p>
   </div>
 </body>
 </html>`;

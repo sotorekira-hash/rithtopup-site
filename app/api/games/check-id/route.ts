@@ -1,9 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
+
 import { z } from "zod";
 
 export const runtime = "nodejs";
 
-// In-game ID → nickname check.
+// In-game ID â†’ nickname check.
 // Upstream: https://api.isan.eu.org (community-run; no auth, best-effort).
 //
 // Route is public (used by the checkout form) but intentionally narrow:
@@ -11,11 +13,11 @@ export const runtime = "nodejs";
 
 const schema = z.object({
   slug: z.enum(["mobile-legends", "genshin-impact", "honkai-star-rail"]),
-  uid: z.string().regex(/^\d{5,12}$/, "UID must be 5–12 digits"),
+  uid: z.string().regex(/^\d{5,12}$/, "UID must be 5â€“12 digits"),
   serverId: z.string().regex(/^\d{1,6}$/, "Server/Zone must be digits").optional(),
 });
 
-// Maps our game slugs → isan endpoint path + whether a server param is needed.
+// Maps our game slugs â†’ isan endpoint path + whether a server param is needed.
 const UPSTREAM: Record<
   z.infer<typeof schema>["slug"],
   { path: string; needsServer: boolean }
@@ -78,10 +80,10 @@ export async function POST(req: NextRequest) {
     // isan.eu.org shape: { success: bool, name?: string, message?: string }
     const d = data as { success?: boolean; name?: string; message?: string };
     if (!d.success || !d.name) {
-      // Upstream validates the id/server combo — treat any non-success as "not found".
+      // Upstream validates the id/server combo â€” treat any non-success as "not found".
       const msg = d.message && d.message.toLowerCase() !== "bad request"
         ? d.message
-        : "Player not found — check your ID and zone.";
+        : "Player not found â€” check your ID and zone.";
       return NextResponse.json(
         { success: false, error: msg },
         { status: 404 }

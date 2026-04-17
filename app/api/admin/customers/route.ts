@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 
 /**
@@ -6,7 +8,7 @@ import { NextResponse } from "next/server";
  * (whichever is present) and returns lifetime value + order counts.
  */
 export async function GET() {
-  // Pull raw orders (bounded) and aggregate in memory — SQLite friendly.
+  // Pull raw orders (bounded) and aggregate in memory â€” SQLite friendly.
   const orders = await prisma.order.findMany({
     take: 5000,
     orderBy: { createdAt: "desc" },

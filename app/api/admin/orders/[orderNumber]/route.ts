@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic";
+
 import { writeAudit } from "@/lib/audit";
 import { notifyTelegram, escapeHtml } from "@/lib/telegram";
 import { NextRequest, NextResponse } from "next/server";
@@ -66,12 +68,12 @@ export async function PATCH(
       action: `order.status.${parsed.data.status.toLowerCase()}`,
       targetType: "order",
       targetId: order.orderNumber,
-      details: `${order.status} → ${parsed.data.status}`,
+      details: `${order.status} â†’ ${parsed.data.status}`,
     });
     if (parsed.data.status === "DELIVERED" || parsed.data.status === "PAID") {
       await notifyTelegram(
-        `✅ <b>Order ${escapeHtml(parsed.data.status)}</b>\n` +
-          `#${escapeHtml(order.orderNumber)} — $${order.amountUsd.toFixed(2)}\n` +
+        `âœ… <b>Order ${escapeHtml(parsed.data.status)}</b>\n` +
+          `#${escapeHtml(order.orderNumber)} â€” $${order.amountUsd.toFixed(2)}\n` +
           `UID: <code>${escapeHtml(order.playerUid)}</code>`
       );
     }

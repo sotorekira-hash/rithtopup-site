@@ -1,4 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
+
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import crypto from "crypto";
@@ -45,7 +47,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Generate a safe random filename — ignore the client-supplied name
+    // Generate a safe random filename â€” ignore the client-supplied name
     // entirely to prevent path traversal and collisions.
     const name = `${Date.now()}-${crypto.randomBytes(8).toString("hex")}.${ext}`;
     const uploadsDir = path.join(process.cwd(), "public", "uploads");

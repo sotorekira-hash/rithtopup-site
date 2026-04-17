@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic";
+
 import { NextRequest, NextResponse } from "next/server";
 import { fetchKhpayStatus } from "@/lib/payment";
 
@@ -47,7 +49,7 @@ export async function GET(
         });
       }
     } catch {
-      // Silently ignore poll errors — we'll retry on the next request.
+      // Silently ignore poll errors â€” we'll retry on the next request.
     }
   }
 

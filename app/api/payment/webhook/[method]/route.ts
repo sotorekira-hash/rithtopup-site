@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic";
+
 import { verifyWebhook, PaymentMethod } from "@/lib/payment";
 import { notifyTelegram, escapeHtml } from "@/lib/telegram";
 import { NextRequest, NextResponse } from "next/server";
@@ -99,9 +101,9 @@ export async function POST(
       const baseUrl = process.env.PUBLIC_APP_URL || process.env.NEXT_PUBLIC_BASE_URL || "";
       const link = baseUrl ? `\n<a href="${baseUrl}/admin/orders/${fullOrder.orderNumber}">Open in admin</a>` : "";
       await notifyTelegram(
-        `💰 <b>New paid order</b>\n` +
+        `ðŸ’° <b>New paid order</b>\n` +
           `<b>#${escapeHtml(fullOrder.orderNumber)}</b>\n` +
-          `${escapeHtml(fullOrder.game.name)} — ${escapeHtml(fullOrder.product.name)}\n` +
+          `${escapeHtml(fullOrder.game.name)} â€” ${escapeHtml(fullOrder.product.name)}\n` +
           `UID: <code>${escapeHtml(fullOrder.playerUid)}</code>\n` +
           `Amount: $${fullOrder.amountUsd.toFixed(2)}${link}`
       );

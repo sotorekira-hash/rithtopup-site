@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic";
+
 import { generateOrderNumber, isValidUid, calcKhr } from "@/lib/utils";
 import { initiatePayment } from "@/lib/payment";
 import { NextRequest, NextResponse } from "next/server";
@@ -151,7 +153,7 @@ export async function POST(req: NextRequest) {
       returnUrl: `${publicUrl}/order?number=${order.orderNumber}`,
       cancelUrl: `${publicUrl}/games/${game.slug}`,
       callbackUrl: `${publicUrl}/api/payment/webhook/khpay`,
-      note: `RITHTOPUP · ${game.name} · ${product.name}`,
+      note: `RITHTOPUP Â· ${game.name} Â· ${product.name}`,
       customerEmail: data.customerEmail,
       metadata: {
         game_slug: game.slug,

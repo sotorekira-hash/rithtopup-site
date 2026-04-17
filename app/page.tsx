@@ -7,7 +7,7 @@ import HeroCarousel from "@/components/HeroCarousel";
 import Link from "next/link";
 import { Zap, ShieldCheck, BadgePercent, Gamepad2, UserRoundCheck, CreditCard, ArrowRight, Search, Sparkles } from "lucide-react";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const [games, banners] = await Promise.all([

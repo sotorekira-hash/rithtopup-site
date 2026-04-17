@@ -1,4 +1,6 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
+export const dynamic = "force-dynamic";
+
 import { writeAudit } from "@/lib/audit";
 import { NextRequest, NextResponse } from "next/server";
 
