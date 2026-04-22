@@ -1,57 +1,76 @@
-﻿import { NextRequest, NextResponse } from "next/server";
-export const dynamic = "force-dynamic";
+// Game UID lookup service
+// This simulates checking player names from game APIs
+// In production, replace with actual game API calls
 
-import { z } from "zod";
-import { lookupNickname } from "@/lib/uidLookup";
-import { checkRateLimit } from "@/lib/rateLimit";
+interface GameLookupConfig {
+  apiUrl?: string
+  apiKey?: string
+  mockNames?: string[]
+}
 
-const bodySchema = z.object({
-  gameSlug: z.string().min(1).max(60),
-  uid: z.string().regex(/^\d{5,20}$/, "UID must be 5â€“20 digits"),
-  server: z.string().regex(/^\d{1,6}$/).optional(),
-});
+const gameConfigs: Record<string, GameLookupConfig> = {
+  mlbb: {
+    mockNames: ['GamerPro', 'LegendKiller', 'DarkLord', 'DiamondMaster', 'ML_Champion'],
+  },
+  freefire: {
+    mockNames: ['FF_Elite', 'HeadshotKing', 'BattleMaster', 'SurvivorPro', 'FF_Sniper'],
+  },
+  pubg: {
+    mockNames: ['PUBG_Warrior', 'ChickenDinner', 'SniperElite', 'BattleRoyale', 'PUBG_Legend'],
+  },
+  genshin: {
+    mockNames: ['Traveler', 'LumineMain', 'AetherMain', 'GanyuLover', 'ArchonHunter'],
+  },
+  cod: {
+    mockNames: ['COD_Operator', 'GhostMain', 'PriceCaptain', 'MW_Sniper', 'WarzonePro'],
+  },
+  valorant: {
+    mockNames: ['Valorant_Pro', 'JettMain', 'PhoenixPlayer', 'SageHealer', 'RazeExplosive'],
+  },
+}
 
-export async function POST(req: NextRequest) {
-  // â”€â”€ rate limit: 10 req / min per IP â”€â”€
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  if (!checkRateLimit(`uid-lookup:${ip}`, 10, 60_000)) {
-    return NextResponse.json(
-      { nickname: null, verified: false, error: "Too many requests â€” try again shortly" },
-      { status: 429 },
-    );
+export async function lookupNickname(
+  gameSlug: string,
+  uid: string,
+  server?: string
+): Promise<string | null> {
+  // Simulate network delay (200-800ms)
+  await new Promise(resolve => setTimeout(resolve, Math.random() * 600 + 200))
+
+  const config = gameConfigs[gameSlug.toLowerCase()]
+  
+  // If game not found, return null
+  if (!config) {
+    console.log(`Game not found: ${gameSlug}`)
+    return null
   }
 
-  // â”€â”€ parse body â”€â”€
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json(
-      { nickname: null, verified: false, error: "Invalid JSON" },
-      { status: 400 },
-    );
+  // For demo: validate that UID is at least 5 digits
+  if (!uid || uid.length < 5 || !/^\d+$/.test(uid)) {
+    return null
   }
 
-  const parsed = bodySchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json(
-      {
-        nickname: null,
-        verified: false,
-        error: parsed.error.issues[0]?.message ?? "Invalid input",
-      },
-      { status: 400 },
-    );
+  // For demo: generate a deterministic nickname based on UID
+  // In production: call actual game API
+  if (config.mockNames) {
+    const index = parseInt(uid.slice(-2)) % config.mockNames.length
+    return `${config.mockNames[index]}_${uid.slice(-4)}`
   }
 
-  const { gameSlug, uid, server } = parsed.data;
+  // Default mock nickname
+  return `Player_${uid.slice(-6)}`
+}
 
-  // â”€â”€ lookup â”€â”€
-  const nickname = await lookupNickname(gameSlug, uid, server);
-
-  return NextResponse.json({
-    nickname,
-    verified: nickname !== null,
-  });
+// Function to get game info from slug
+export function getGameInfo(slug: string) {
+  const games: Record<string, { name: string; requiresServer: boolean }> = {
+    mlbb: { name: 'Mobile Legends', requiresServer: true },
+    freefire: { name: 'Free Fire', requiresServer: false },
+    pubg: { name: 'PUBG Mobile', requiresServer: false },
+    genshin: { name: 'Genshin Impact', requiresServer: false },
+    cod: { name: 'Call of Duty', requiresServer: false },
+    valorant: { name: 'Valorant', requiresServer: false },
+  }
+  
+  return games[slug.toLowerCase()]
 }
